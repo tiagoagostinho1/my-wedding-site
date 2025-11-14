@@ -27,7 +27,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const body = req.body;
 
   try {
-    const backendResponse = await fetch(`${API_BASE_URL}/rsvp`, {
+    const backendResponse = await fetch(`${API_BASE_URL}/confirmation`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
