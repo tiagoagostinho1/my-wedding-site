@@ -37,7 +37,7 @@ const Home = () => {
 
         <div className="max-w-xl mx-auto space-y-6">
           <div>
-            <h3 className="text-xl font-medium">Cerimónia & Fasta</h3>
+            <h3 className="text-xl font-medium">Cerimónia & Festa</h3>
             <p className="text-gray-700">10 de Outubro 2026 — 14:00</p>
             <p className="text-gray-700">Quinta Vila Meã</p>
           </div>
