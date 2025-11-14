@@ -1,5 +1,5 @@
 import { useState } from "react";
-import API_URL from "../api/rsvp";
+import API_URL from "../../api/rsvp";
 
 interface FormData {
   name: string;
