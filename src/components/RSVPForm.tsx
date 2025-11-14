@@ -1,5 +1,4 @@
 import { useState } from "react";
-import API_URL from "../../api/rsvp";
 
 interface FormData {
   name: string;
@@ -63,7 +62,7 @@ const RSVPForm = () => {
     };
 
     try {
-      await fetch(`${API_URL}/rsvp`, {
+      await fetch("/api/rsvp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
