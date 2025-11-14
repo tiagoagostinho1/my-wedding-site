@@ -8,6 +8,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Método não permitido" });
   }
+
   /*
   const allowedOrigins = [
     "https://my-wedding-site-i2t4xj3oi-tmagostinhos-projects.vercel.app",
@@ -20,7 +21,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (origin && !allowedOrigins.includes(origin)) {
     return res.status(403).json({ error: "Forbidden" });
   }
-
+*/
   const API_BASE_URL = process.env.API_BASE_URL;
   const API_SECRET_TOKEN = process.env.API_SECRET_TOKEN;
 
@@ -46,6 +47,4 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     console.error(error);
     return res.status(500).json({ error: "Erro ao enviar os dados" });
   }
-    */
-  return res.status(200).json({ message: "Hello, world!" });
 }
