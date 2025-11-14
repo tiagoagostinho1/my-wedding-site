@@ -2,10 +2,12 @@ import "./Home.css";
 import Hero from "./components/Hero";
 import Countdown from "./components/Countdown";
 import Timeline from "./components/Timeline";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 const Home = () => {
   return (
     <main className="bg-[#faf7f2] text-gray-800">
+      <SpeedInsights />
       {/* HERO */}
       <Hero />
 
@@ -35,15 +37,9 @@ const Home = () => {
 
         <div className="max-w-xl mx-auto space-y-6">
           <div>
-            <h3 className="text-xl font-medium">Cerimónia</h3>
-            <p className="text-gray-700">15 de Setembro 2025 — 14:30</p>
-            <p className="text-gray-700">Igreja de Santa Maria</p>
-          </div>
-
-          <div>
-            <h3 className="text-xl font-medium">Festa</h3>
-            <p className="text-gray-700">15 de Setembro 2025 — 16:00</p>
-            <p className="text-gray-700">Quinta das Flores</p>
+            <h3 className="text-xl font-medium">Cerimónia & Fasta</h3>
+            <p className="text-gray-700">10 de Outubro 2026 — 14:00</p>
+            <p className="text-gray-700">Quinta Vila Meã</p>
           </div>
 
           <a
