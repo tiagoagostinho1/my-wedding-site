@@ -8,7 +8,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Método não permitido" });
   }
-
+  /*
   const allowedOrigins = [
     "https://my-wedding-site-i2t4xj3oi-tmagostinhos-projects.vercel.app",
     "https://my-wedding-site-three.vercel.app",
@@ -46,4 +46,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     console.error(error);
     return res.status(500).json({ error: "Erro ao enviar os dados" });
   }
+    */
+  return res.status(200).json({ message: "Hello, world!" });
 }
