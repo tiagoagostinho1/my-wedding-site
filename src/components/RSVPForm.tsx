@@ -1,25 +1,49 @@
 import { useState } from "react";
+import API_URL from "../api/rsvp";
 
-interface RSVPFormData {
+interface FormData {
   name: string;
   email: string;
   attending: "yes" | "no";
-  guests: number;
-  guestNames: string[];
+  guests: number; // total (incluindo a pessoa principal)
+  guestNames: string[]; // apenas acompanhantes
   notes?: string;
 }
 
 const RSVPForm = () => {
   const [attending, setAttending] = useState<"yes" | "no">("yes");
-  const [guestCount, setGuestCount] = useState(1);
-  const [guestNames, setGuestNames] = useState<string[]>([""]);
-
+  const [guestCount, setGuestCount] = useState(1); // inclui sempre a pessoa principal
+  const [guestNames, setGuestNames] = useState<string[]>([]); // só acompanhantes
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
 
-  const handleGuestNameChange = (index: number, value: string) => {
+  const handleGuestNameChange = (i: number, value: string) => {
     const updated = [...guestNames];
-    updated[index] = value;
+    updated[i] = value;
+    setGuestNames(updated);
+  };
+
+  const handleGuestCountChange = (value: number) => {
+    setGuestCount(value);
+
+    if (value <= 1) {
+      setGuestNames([]);
+      return;
+    }
+
+    const extraGuests = value - 1; // só acompanhantes
+    const updated = [...guestNames];
+
+    if (extraGuests > updated.length) {
+      // adiciona campos
+      while (updated.length < extraGuests) {
+        updated.push("");
+      }
+    } else if (extraGuests < updated.length) {
+      // remove campos a mais
+      updated.length = extraGuests;
+    }
+
     setGuestNames(updated);
   };
 
@@ -28,34 +52,36 @@ const RSVPForm = () => {
     setLoading(true);
 
     const form = new FormData(e.currentTarget);
-    const data: RSVPFormData = {
+
+    const data: FormData = {
       name: form.get("name") as string,
       email: form.get("email") as string,
-      attending: form.get("attending") as "yes" | "no",
+      attending,
       guests: attending === "yes" ? guestCount : 0,
       guestNames: attending === "yes" ? guestNames : [],
-      notes: form.get("notes") as string,
+      notes: (form.get("notes") as string) || undefined,
     };
 
     try {
-      await fetch("https://o-teu-servidor.com/api/rsvp", {
+      await fetch(`${API_URL}/rsvp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
 
       setDone(true);
-    } catch (error) {
-      console.error("Erro ao enviar RSVP", error);
+    } catch (err) {
+      console.error("Erro ao enviar RSVP:", err);
+      // aqui no futuro podes mostrar toast de erro
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   if (done) {
     return (
       <p className="text-center text-xl mt-10 text-green-700">
-        Obrigado pela confirmação! 💛 Estamos muito felizes por contar contigo.
+        Obrigado pela confirmação! 💛
       </p>
     );
   }
@@ -69,7 +95,7 @@ const RSVPForm = () => {
         Confirma a tua presença
       </h2>
 
-      {/* Nome */}
+      {/* Nome principal */}
       <input
         name="name"
         required
@@ -77,7 +103,7 @@ const RSVPForm = () => {
         className="w-full p-3 border rounded"
       />
 
-      {/* Email */}
+      {/* Email principal */}
       <input
         name="email"
         required
@@ -111,21 +137,16 @@ const RSVPForm = () => {
         </label>
       </div>
 
-      {/* Só mostra resto se attending = yes */}
       {attending === "yes" && (
         <>
-          {/* Nº de pessoas */}
+          {/* Quantas pessoas (inclui a pessoa principal) */}
           <label className="block mt-4 font-medium">
             Quantas pessoas (incluindo tu)?
           </label>
 
           <select
             value={guestCount}
-            onChange={(e) => {
-              const count = Number(e.target.value);
-              setGuestCount(count);
-              setGuestNames(Array(count).fill(""));
-            }}
+            onChange={(e) => handleGuestCountChange(Number(e.target.value))}
             className="w-full p-3 border rounded"
           >
             {[1, 2, 3, 4, 5, 6].map((n) => (
@@ -135,27 +156,26 @@ const RSVPForm = () => {
             ))}
           </select>
 
-          {/* Nomes dos convidados */}
-          <div className="space-y-2 mt-4">
-            {guestNames.map((guest, index) => (
-              <input
-                key={index}
-                placeholder={
-                  index === 0
-                    ? "O teu nome (de novo para registo interno)"
-                    : `Nome da pessoa ${index + 1}`
-                }
-                value={guest}
-                onChange={(e) => handleGuestNameChange(index, e.target.value)}
-                className="w-full p-3 border rounded"
-              />
-            ))}
-          </div>
+          {/* Nomes dos acompanhantes, se existirem */}
+          {guestNames.length > 0 && (
+            <div className="space-y-2 mt-4">
+              <p className="font-medium">Nomes dos acompanhantes</p>
+              {guestNames.map((guest, index) => (
+                <input
+                  key={index}
+                  placeholder={`Acompanhante ${index + 1}`}
+                  value={guest}
+                  onChange={(e) => handleGuestNameChange(index, e.target.value)}
+                  className="w-full p-3 border rounded"
+                />
+              ))}
+            </div>
+          )}
 
           {/* Notas */}
           <textarea
             name="notes"
-            placeholder="Notas (opcional: alergias, bebés, transporte...)"
+            placeholder="Notas (alergias, bebés, transporte, etc.)"
             className="w-full p-3 border rounded mt-4"
           />
         </>
