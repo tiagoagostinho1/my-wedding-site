@@ -80,9 +80,17 @@ const RSVPForm = () => {
 
   if (done) {
     return (
-      <p className="text-center text-xl mt-10 text-green-700">
-        Obrigado pela confirmação! 💛
-      </p>
+      <div className="min-h-screen flex flex-col items-center  px-6">
+        <p className="text-center text-xl mb-6 text-green-700">
+          Obrigado pela confirmação! 💛
+        </p>
+        <a
+          href="/"
+          className="px-6 py-3 bg-white text-black rounded-full shadow-md hover:bg-gray-200 transition"
+        >
+          Voltar ao início
+        </a>
+      </div>
     );
   }
 
